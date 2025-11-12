@@ -13,6 +13,9 @@ This script fetches articles from an RSS feed, converts them to a PDF file, and 
 
 To install the Python libraries, run:
 ```bash
+pip install feedparser requests beautifulsoup4 weasyprint
+
+# Or with pdfkit (requires wkhtmltopdf binary)
 pip install feedparser requests beautifulsoup4 pdfkit
 ```
 
@@ -25,6 +28,21 @@ sudo apt-get install wkhtmltopdf
 
 ```bash
 python3 rss_to_kindle.py <rss_url> <kindle_email> [options]
+# Tech News
+python script.py "https://techcrunch.com/feed/" your@kindle.com
+
+# BBC News
+python script.py "http://feeds.bbci.co.uk/news/rss.xml" your@kindle.com
+
+# The Hindu (India)
+python script.py "https://www.thehindu.com/news/national/feeder/default.rss" your@kindle.com
+
+# Python Official Blog
+python script.py "https://blog.python.org/feeds/posts/default.rss" your@kindle.com
+
+# With dry run
+python script.py "https://techcrunch.com/feed/" your@kindle.com --dry_run --max_articles 5
+
 ```
 
 ### Arguments
