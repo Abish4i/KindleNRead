@@ -5,6 +5,7 @@ import pdfkit
 import smtplib
 import argparse
 import os
+import socket
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -44,8 +45,12 @@ def send_email(sender_email, sender_password, recipient_email, subject, body, at
         server.sendmail(sender_email, recipient_email, text)
         server.quit()
         print("Email sent successfully!")
+    except smtplib.SMTPAuthenticationError:
+        print("Error sending email: SMTP authentication failed. Please check your sender email and password.")
+    except (socket.gaierror, smtplib.SMTPConnectError):
+        print("Error sending email: Could not connect to the SMTP server. Please check your internet connection and the SMTP server address.")
     except Exception as e:
-        print(f"Error sending email: {e}")
+        print(f"An unexpected error occurred while sending the email: {e}")
 
 def extract_article_content(article_url):
     """
@@ -128,6 +133,7 @@ def main():
     parser.add_argument("--sender_password", help="Your email password.", default=os.environ.get("SENDER_PASSWORD"))
     parser.add_argument("--output_filename", help="The name of the output PDF file.", default="rss_feed.pdf")
     parser.add_argument("--max_articles", help="The maximum number of articles to process.", type=int, default=10)
+    parser.add_argument("--dry_run", help="Simulate the email sending process without actually sending an email.", action="store_true")
 
 
     args = parser.parse_args()
@@ -146,7 +152,15 @@ def main():
 
         convert_to_pdf(articles_with_content, args.output_filename)
 
-        if args.sender_email and args.sender_password:
+        if args.dry_run:
+            print("\\n--- Dry Run Mode ---")
+            print(f"To: {args.kindle_email}")
+            print(f"From: {args.sender_email}")
+            print(f"Subject: RSS Feed Content")
+            print(f"Attachment: {args.output_filename}")
+            print("--- End Dry Run ---")
+
+        elif args.sender_email and args.sender_password:
              send_email(
                  args.sender_email,
                  args.sender_password,

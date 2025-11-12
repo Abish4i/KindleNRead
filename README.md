@@ -24,5 +24,6 @@ python3 rss_to_kindle.py <rss_url> <kindle_email> [options]
 * `--sender_password`: Your email password.
 * `--output_filename`: The name of the output PDF file (default: `rss_feed.pdf`).
 * `--max_articles`: The maximum number of articles to process (default: 10).
+* `--dry-run`: Simulate the email sending process without actually sending an email.
 
 You can also set the `SENDER_EMAIL` and `SENDER_PASSWORD` environment variables instead of using the command-line arguments.
